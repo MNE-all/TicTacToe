@@ -4,6 +4,9 @@ var
   game, player: integer;
 
 var
+  name1, name2: string;
+
+var
   who := new ButtonABC(0, 0, 300, 35, '', clwhite);
 
 var
@@ -14,7 +17,7 @@ type
 
 var
   field: mas;
-
+  
 {1}var
   a := new ButtonABC(0, 35, 100, 100, '', clwhite);
 
@@ -22,7 +25,7 @@ var
   b := new ButtonABC(100, 35, 100, 100, '', clwhite);
 
 {3}var
-  c := new ButtonABC(200, 35,100, 100,'', clwhite);
+  c := new ButtonABC(200, 35, 100, 100, '', clwhite);
 
 {4}var
   d := new ButtonABC(0, 135, 100, 100, '', clwhite);
@@ -31,7 +34,7 @@ var
   e := new ButtonABC(100, 135, 100, 100, '', clwhite);
 
 {6}var
-  f := new ButtonABC(200, 135,100, 100, '', clwhite);
+  f := new ButtonABC(200, 135, 100, 100, '', clwhite);
 
 {7}var
   g := new ButtonABC(0, 235, 100, 100, '', clwhite);
@@ -40,7 +43,7 @@ var
   h := new ButtonABC(100, 235, 100, 100, '', clwhite);
 
 {9}var
-  i := new ButtonABC(200, 235,100, 100, '', clwhite);
+  i := new ButtonABC(200, 235, 100, 100, '', clwhite);
 
 procedure destroyer();
 begin
@@ -55,36 +58,55 @@ begin
   i.Destroy;
 end;
 
-procedure winer(field: mas);
+procedure winer(field: mas; name1, name2: string);
 begin
-  if ((field[1, 1] = 1) and (field[2, 2] = 1) and (field[3, 3] = 1)) or ((field[1, 3] = 1) and (field[2, 2] = 1) and (field[3, 1] = 1)) then
+  if ((field[1, 1] = 1) and (field[2, 2] = 1) and (field[3, 3] = 1)) then
   begin
-    who.Text := '1 Win';
+    who.Text := ('Игрок ' + name1 + ' победил!');
     destroyer;
   end;
-  if ((field[1, 1] = 2) and (field[2, 2] = 2) and (field[3, 3] = 2)) or ((field[1, 3] = 2) and (field[2, 2] = 2) and (field[3, 1] = 2)) then
+  if ((field[1, 3] = 1) and (field[2, 2] = 1) and (field[3, 1] = 1)) then
   begin
-    who.Text := '2 Win';
+    who.Text := ('Игрок ' + name1 + ' победил!');
+    destroyer;
+  end;
+  if ((field[1, 1] = 2) and (field[2, 2] = 2) and (field[3, 3] = 2)) then
+  begin
+    who.Text := ('Игрок ' + name2 + ' победил!');
+    
+    destroyer;
+  end;
+  if ((field[1, 3] = 2) and (field[2, 2] = 2) and (field[3, 1] = 2)) then
+  begin
+    who.Text := ('Игрок ' + name2 + ' победил!');
+    
     destroyer;
   end;
   for var z := 1 to 3 do
   begin
-    if ((field[z, 1] = 1) and (field[z, 2] = 1) and (field[z, 3] = 1)) or ((field[1, z] = 1) and (field[2, z] = 1) and (field[3, z] = 1)) then 
+    if ((field[z, 1] = 1) and (field[z, 2] = 1) and (field[z, 3] = 1)) then 
     begin
-      who.Text := '1 Win';
+      who.Text := ('Игрок ' + name1 + ' победил!');
+      
       destroyer;
     end;
-    if ((field[z, 1] = 2) and (field[z, 2] = 2) and (field[z, 3] = 2)) or ((field[1, z] = 2) and (field[2, z] = 2) and (field[3, z] = 2)) then 
+    if ((field[1, z] = 1) and (field[2, z] = 1) and (field[3, z] = 1)) then
     begin
-      who.Text := '2 Win';
+      who.Text := ('Игрок ' + name1 + ' победил!');
       destroyer;
     end;
-  
+    if ((field[z, 1] = 2) and (field[z, 2] = 2) and (field[z, 3] = 2)) or ((field[1, z] = 2) and (field[2, z] = 2) and (field[3, z] = 2)) then
+    begin
+      who.Text := ('Игрок ' + name2 + ' победил!');
+      destroyer;
+    end;
+    
   end;
 end;
 
 
 begin
+
   PX := new picture(90, 90);
   PX.load('X.png');
   PX.SetHeight(80);
@@ -94,21 +116,31 @@ begin
   PO.load('O.png');
   PO.SetHeight(80);
   PO.SetWidth(80);
+  SetWindowIsFixedSize(true);
+  who.Text := ('Введите имя первого игрока ');
+  readln(name1);
+  who.Text := ('Введите имя второго игрока ');
+  readln(name2);
+  
+  
   clearwindow();
   game := 0;
   Window().Caption := ('Tic Tac Toe');
-  who.Text := ('player = ' + ((game mod 2) + 1));
-  Line(0,35,300,35); // Горизонтальные
-  Line(0,135,300,135);
-  Line(0,235,300,235);
   
-  Line(100,35,100,335); // Вертикальные
-  Line(200,35,200,335);
-
+  
+  
+  who.Text := ('Игрок: ' + name1);
+  Line(0, 35, 300, 35); // Горизонтальные
+  Line(0, 135, 300, 135);
+  Line(0, 235, 300, 235);
+  
+  Line(100, 35, 100, 335); // Вертикальные
+  Line(200, 35, 200, 335);
+  
   
   SetWindowWidth(300);
   SetWindowHeight(335);
- 
+  
   
   a.OnClick := procedure ->
   begin
@@ -118,14 +150,16 @@ begin
     begin
       field[1, 1] := 1;
       PX.Draw(10, 45);
+      who.Text := ('Игрок: ' + name2); 
     end
     else begin
       PO.Draw(10, 45);
       field[1, 1] := 2; 
+      who.Text := ('Игрок: ' + name1);
     end;
     game += 1;
-    who.Text := ('player = ' + ((game mod 2) + 1));  
-    winer(field);
+    
+    winer(field, name1, name2);
   end;
   
   b.OnClick := procedure ->
@@ -136,14 +170,15 @@ begin
     begin
       field[1, 2] := 1;
       PX.Draw(110, 45);
+      who.Text := ('Игрок: ' + name2);
     end
     else begin
       field[1, 2] := 2;
       PO.Draw(110, 45);
+      who.Text := ('Игрок: ' + name1);
     end;
     game += 1;
-    who.Text := ('player = ' + ((game mod 2) + 1));
-    winer(field);
+    winer(field, name1, name2);
   end;
   
   c.OnClick := procedure ->
@@ -154,15 +189,16 @@ begin
     begin
       field[1, 3] := 1;
       PX.Draw(210, 45);
+      who.Text := ('Игрок: ' + name2);
     end
     else begin
       field[1, 3] := 2;
       PO.Draw(210, 45);
+      who.Text := ('Игрок: ' + name1);
     end;
     
     game += 1;
-    who.Text := ('player = ' + ((game mod 2) + 1));
-    winer(field);
+    winer(field, name1, name2);
   end;
   
   d.OnClick := procedure ->
@@ -173,15 +209,16 @@ begin
     begin
       field[2, 1] := 1;
       PX.Draw(10, 145);
+      who.Text := ('Игрок: ' + name2);
     end
     else begin
       field[2, 1] := 2;
       PO.Draw(10, 145);
+      who.Text := ('Игрок: ' + name1);
     end;
     
     game += 1;
-    who.Text := ('player = ' + ((game mod 2) + 1));
-    winer(field);
+    winer(field, name1, name2);
   end;
   
   e.OnClick := procedure ->
@@ -192,15 +229,16 @@ begin
     begin
       field[2, 2] := 1;
       PX.Draw(110, 145);
+      who.Text := ('Игрок: ' + name2);
     end
     else begin
       field[2, 2] := 2;
       PO.Draw(110, 145);
+      who.Text := ('Игрок: ' + name1);
     end;
     
     game += 1;
-    who.Text := ('player = ' + ((game mod 2) + 1));
-    winer(field);
+    winer(field, name1, name2);
   end;
   
   f.OnClick := procedure ->
@@ -211,15 +249,16 @@ begin
     begin
       field[2, 3] := 1;
       PX.Draw(210, 145);
+      who.Text := ('Игрок: ' + name2);
     end
     else begin
       field[2, 3] := 2;
       PO.Draw(210, 145);
+      who.Text := ('Игрок: ' + name1);
     end;
     
     game += 1;
-    who.Text := ('player = ' + ((game mod 2) + 1));
-    winer(field);
+    winer(field, name1, name2);
   end;
   
   g.OnClick := procedure ->
@@ -230,15 +269,16 @@ begin
     begin
       field[3, 1] := 1;
       PX.Draw(10, 245);
+      who.Text := ('Игрок: ' + name2);
     end
     else begin
       field[3, 1] := 2;
       PO.Draw(10, 245);
+      who.Text := ('Игрок: ' + name1);
     end;
     
     game += 1;
-    who.Text := ('player = ' + ((game mod 2) + 1));
-    winer(field);
+    winer(field, name1, name2);
   end;
   
   h.OnClick := procedure ->
@@ -249,15 +289,16 @@ begin
     begin
       field[3, 2] := 1;
       PX.Draw(110, 245);
+      who.Text := ('Игрок: ' + name2);
     end
     else begin
       field[3, 2] := 2;
       PO.Draw(110, 245);
+      who.Text := ('Игрок: ' + name1);
     end;
     
     game += 1;
-    who.Text := ('player = ' + ((game mod 2) + 1));
-    winer(field);
+    winer(field, name1, name2);
   end;
   
   i.OnClick := procedure ->
@@ -268,15 +309,16 @@ begin
     begin
       field[3, 3] := 1;
       PX.Draw(210, 245);
+      who.Text := ('Игрок: ' + name2);
     end
     else begin
       field[3, 3] := 2;
       PO.Draw(210, 245);
+      who.Text := ('Игрок: ' + name1);
     end;
     
     game += 1;
-    who.Text := ('player = ' + ((game mod 2) + 1));
-    winer(field);
+    winer(field, name1, name2);
   end;
   
 end.
