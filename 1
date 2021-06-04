@@ -1,89 +1,282 @@
 uses abcbuttons, graphABC;
 
 var
-  field: array[1..3, 1..3] of integer;
+  game, player: integer;
 
 var
-  answ, game: integer;
+  who := new ButtonABC(0, 0, 300, 35, '', clwhite);
 
 var
-  who := new ButtonABC(50, 0, 100, 30, '', clwhite);
+  PO, PX: picture;
 
+type
+  mas = array [1..3, 1..3] of integer;
+
+var
+  field: mas;
 
 {1}var
-  a := new ButtonABC(50, 50, 30, '', clwhite);
+  a := new ButtonABC(0, 35, 100, 100, '', clwhite);
 
 {2}var
-  b := new ButtonABC(100, 50, 30, 30, '', clwhite);
+  b := new ButtonABC(100, 35, 100, 100, '', clwhite);
 
 {3}var
-  c := new ButtonABC(150, 50, 30, '', clwhite);
+  c := new ButtonABC(200, 35,100, 100,'', clwhite);
 
 {4}var
-  d := new ButtonABC(50, 100, 30, '', clwhite);
+  d := new ButtonABC(0, 135, 100, 100, '', clwhite);
 
 {5}var
-  e := new ButtonABC(100, 100, 30, '', clwhite);
+  e := new ButtonABC(100, 135, 100, 100, '', clwhite);
 
 {6}var
-  f := new ButtonABC(150, 100, 30, '', clwhite);
+  f := new ButtonABC(200, 135,100, 100, '', clwhite);
 
 {7}var
-  g := new ButtonABC(50, 150, 30, '', clwhite);
+  g := new ButtonABC(0, 235, 100, 100, '', clwhite);
 
 {8}var
-  h := new ButtonABC(100, 150, 30, '', clwhite);
+  h := new ButtonABC(100, 235, 100, 100, '', clwhite);
 
 {9}var
-  i := new ButtonABC(150, 150, 30, '', clwhite);
+  i := new ButtonABC(200, 235,100, 100, '', clwhite);
 
-function stepx(game: integer): integer;
+procedure destroyer();
 begin
+  a.Destroy;
+  b.Destroy;
+  c.Destroy;
+  d.Destroy;
+  e.Destroy;
+  f.Destroy;
+  g.Destroy;
+  h.Destroy;
+  i.Destroy;
+end;
+
+procedure winer(field: mas);
+begin
+  if ((field[1, 1] = 1) and (field[2, 2] = 1) and (field[3, 3] = 1)) or ((field[1, 3] = 1) and (field[2, 2] = 1) and (field[3, 1] = 1)) then
+  begin
+    who.Text := '1 Win';
+    destroyer;
+  end;
+  if ((field[1, 1] = 2) and (field[2, 2] = 2) and (field[3, 3] = 2)) or ((field[1, 3] = 2) and (field[2, 2] = 2) and (field[3, 1] = 2)) then
+  begin
+    who.Text := '2 Win';
+    destroyer;
+  end;
+  for var z := 1 to 3 do
+  begin
+    if ((field[z, 1] = 1) and (field[z, 2] = 1) and (field[z, 3] = 1)) or ((field[1, z] = 1) and (field[2, z] = 1) and (field[3, z] = 1)) then 
+    begin
+      who.Text := '1 Win';
+      destroyer;
+    end;
+    if ((field[z, 1] = 2) and (field[z, 2] = 2) and (field[z, 3] = 2)) or ((field[1, z] = 2) and (field[2, z] = 2) and (field[3, z] = 2)) then 
+    begin
+      who.Text := '2 Win';
+      destroyer;
+    end;
+  
+  end;
+end;
+
+
+begin
+  PX := new picture(90, 90);
+  PX.load('X.png');
+  PX.SetHeight(80);
+  PX.SetWidth(80);
+  
+  PO := new Picture(1, 1);
+  PO.load('O.png');
+  PO.SetHeight(80);
+  PO.SetWidth(80);
+  clearwindow();
+  game := 0;
+  Window().Caption := ('Tic Tac Toe');
+  who.Text := ('player = ' + ((game mod 2) + 1));
+  Line(0,35,300,35); // Горизонтальные
+  Line(0,135,300,135);
+  Line(0,235,300,235);
+  
+  Line(100,35,100,335); // Вертикальные
+  Line(200,35,200,335);
+
+  
+  SetWindowWidth(300);
+  SetWindowHeight(335);
+ 
+  
   a.OnClick := procedure ->
   begin
-    a.text := 'X';
-    field[1, 1] := 1;
+    a.Destroy;
+    player := (game mod 2) + 1;
+    if player = 1 then
+    begin
+      field[1, 1] := 1;
+      PX.Draw(10, 45);
+    end
+    else begin
+      PO.Draw(10, 45);
+      field[1, 1] := 2; 
+    end;
     game += 1;
+    who.Text := ('player = ' + ((game mod 2) + 1));  
+    winer(field);
   end;
-  game := result;
-end;
-
-function stepo(game: integer): integer;
-begin
+  
   b.OnClick := procedure ->
   begin
-    b.text := 'O';
-    game += 1;
-  end;
-  game := result;
-end;
-
-
-begin
-  SetWindowWidth(300);
-  SetWindowHeight(300);
-  game := 1;
-  while game < 9 do
-  begin
-    if (game mod 2) = 1 then
+    b.Destroy;
+    player := (game mod 2) + 1;
+    if player = 1 then
     begin
-      who.Text := 'Step X';
-      a.OnClick := procedure ->
-      begin
-        a.text := 'X';
-        field[1, 1] := 1;
-        game += 1;
-      end;
+      field[1, 2] := 1;
+      PX.Draw(110, 45);
     end
-    else
+    else begin
+      field[1, 2] := 2;
+      PO.Draw(110, 45);
+    end;
+    game += 1;
+    who.Text := ('player = ' + ((game mod 2) + 1));
+    winer(field);
+  end;
+  
+  c.OnClick := procedure ->
+  begin
+    c.Destroy;
+    player := (game mod 2) + 1;
+    if player = 1 then
     begin
-      who.Text := 'Step O';
-      stepO(game);
+      field[1, 3] := 1;
+      PX.Draw(210, 45);
+    end
+    else begin
+      field[1, 3] := 2;
+      PO.Draw(210, 45);
     end;
     
+    game += 1;
+    who.Text := ('player = ' + ((game mod 2) + 1));
+    winer(field);
   end;
   
+  d.OnClick := procedure ->
+  begin
+    d.Destroy;   
+    player := (game mod 2) + 1;
+    if player = 1 then
+    begin
+      field[2, 1] := 1;
+      PX.Draw(10, 145);
+    end
+    else begin
+      field[2, 1] := 2;
+      PO.Draw(10, 145);
+    end;
+    
+    game += 1;
+    who.Text := ('player = ' + ((game mod 2) + 1));
+    winer(field);
+  end;
   
+  e.OnClick := procedure ->
+  begin
+    e.Destroy; 
+    player := (game mod 2) + 1;
+    if player = 1 then
+    begin
+      field[2, 2] := 1;
+      PX.Draw(110, 145);
+    end
+    else begin
+      field[2, 2] := 2;
+      PO.Draw(110, 145);
+    end;
+    
+    game += 1;
+    who.Text := ('player = ' + ((game mod 2) + 1));
+    winer(field);
+  end;
   
+  f.OnClick := procedure ->
+  begin
+    f.Destroy; 
+    player := (game mod 2) + 1;
+    if player = 1 then
+    begin
+      field[2, 3] := 1;
+      PX.Draw(210, 145);
+    end
+    else begin
+      field[2, 3] := 2;
+      PO.Draw(210, 145);
+    end;
+    
+    game += 1;
+    who.Text := ('player = ' + ((game mod 2) + 1));
+    winer(field);
+  end;
+  
+  g.OnClick := procedure ->
+  begin
+    g.Destroy;
+    player := (game mod 2) + 1;
+    if player = 1 then
+    begin
+      field[3, 1] := 1;
+      PX.Draw(10, 245);
+    end
+    else begin
+      field[3, 1] := 2;
+      PO.Draw(10, 245);
+    end;
+    
+    game += 1;
+    who.Text := ('player = ' + ((game mod 2) + 1));
+    winer(field);
+  end;
+  
+  h.OnClick := procedure ->
+  begin
+    h.Destroy;
+    player := (game mod 2) + 1;
+    if player = 1 then
+    begin
+      field[3, 2] := 1;
+      PX.Draw(110, 245);
+    end
+    else begin
+      field[3, 2] := 2;
+      PO.Draw(110, 245);
+    end;
+    
+    game += 1;
+    who.Text := ('player = ' + ((game mod 2) + 1));
+    winer(field);
+  end;
+  
+  i.OnClick := procedure ->
+  begin
+    i.Destroy;
+    player := (game mod 2) + 1;
+    if player = 1 then
+    begin
+      field[3, 3] := 1;
+      PX.Draw(210, 245);
+    end
+    else begin
+      field[3, 3] := 2;
+      PO.Draw(210, 245);
+    end;
+    
+    game += 1;
+    who.Text := ('player = ' + ((game mod 2) + 1));
+    winer(field);
+  end;
   
 end.
