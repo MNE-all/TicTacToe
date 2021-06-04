@@ -1,0 +1,89 @@
+uses abcbuttons, graphABC;
+
+var
+  field: array[1..3, 1..3] of integer;
+
+var
+  answ, game: integer;
+
+var
+  who := new ButtonABC(50, 0, 100, 30, '', clwhite);
+
+
+{1}var
+  a := new ButtonABC(50, 50, 30, '', clwhite);
+
+{2}var
+  b := new ButtonABC(100, 50, 30, 30, '', clwhite);
+
+{3}var
+  c := new ButtonABC(150, 50, 30, '', clwhite);
+
+{4}var
+  d := new ButtonABC(50, 100, 30, '', clwhite);
+
+{5}var
+  e := new ButtonABC(100, 100, 30, '', clwhite);
+
+{6}var
+  f := new ButtonABC(150, 100, 30, '', clwhite);
+
+{7}var
+  g := new ButtonABC(50, 150, 30, '', clwhite);
+
+{8}var
+  h := new ButtonABC(100, 150, 30, '', clwhite);
+
+{9}var
+  i := new ButtonABC(150, 150, 30, '', clwhite);
+
+function stepx(game: integer): integer;
+begin
+  a.OnClick := procedure ->
+  begin
+    a.text := 'X';
+    field[1, 1] := 1;
+    game += 1;
+  end;
+  game := result;
+end;
+
+function stepo(game: integer): integer;
+begin
+  b.OnClick := procedure ->
+  begin
+    b.text := 'O';
+    game += 1;
+  end;
+  game := result;
+end;
+
+
+begin
+  SetWindowWidth(300);
+  SetWindowHeight(300);
+  game := 1;
+  while game < 9 do
+  begin
+    if (game mod 2) = 1 then
+    begin
+      who.Text := 'Step X';
+      a.OnClick := procedure ->
+      begin
+        a.text := 'X';
+        field[1, 1] := 1;
+        game += 1;
+      end;
+    end
+    else
+    begin
+      who.Text := 'Step O';
+      stepO(game);
+    end;
+    
+  end;
+  
+  
+  
+  
+end.
