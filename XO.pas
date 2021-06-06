@@ -39,7 +39,7 @@ var
   
   function replay():integer;
   begin
-    var replay:= new ButtonABC(60,175,90, 'replay?', clwhite);  
+    //var replay:= new ButtonABC(60,175,90, 'replay?', clwhite);  
   end;
   
   procedure destroy();
